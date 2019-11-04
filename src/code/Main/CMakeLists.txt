@@ -3,6 +3,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 include_directories(${GLFW_SOURCE_DIR}/include)
 include_directories(${glxw_BINARY_DIR}/include)
 INCLUDE_DIRECTORIES(${Example_SOURCE_DIR}/Library)
+include_directories(${Example_SOURCE_DIR}/OpenGL)
 
 LINK_DIRECTORIES(${Example_BINARY_DIR}/Library)
 link_directories(${Example_BINARY_DIR}/OpenGL)
