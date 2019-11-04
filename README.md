@@ -17,7 +17,7 @@ Or do it manually:
 git submodule update --init --recursive
 ```
 
-## Build ?##
+## Build ##
 
 For Windows under the visual studio command prompt:
 ```
