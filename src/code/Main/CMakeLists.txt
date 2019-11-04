@@ -1,17 +1,24 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
-PROJECT(HelloWorld)
-
-# List all source files
-SET(SOURCE_FILES
-    HelloWorld.cpp)
-
-# library path
+include_directories(${GLFW_SOURCE_DIR}/include)
+include_directories(${glxw_BINARY_DIR}/include)
 INCLUDE_DIRECTORIES(${Example_SOURCE_DIR}/Library)
+
 LINK_DIRECTORIES(${Example_BINARY_DIR}/Library)
+link_directories(${Example_BINARY_DIR}/OpenGL)
 
-# Create the executable target
-ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCE_FILES})
+SET(LIBRARIES glfw glxw ${GLFW_LIBRARIES} ${GLXW_LIBRARY} ${OPENGL_LIBRARY} ${CMAKE_DL_LIBS} CoreLibrary OpenGLLibrary)
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ExampleLibrary)
+set(projects
+Basic
+HelloWorld
+)
+
+foreach(project ${projects})
+
+project(${project})
+add_executable(${project} ${project}.cpp)
+target_link_libraries(${project} ${LIBRARIES})
+
+endforeach(project)
 

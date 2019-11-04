@@ -1,0 +1,6 @@
+[submodule "src/external/glfw"]
+	path = src/external/glfw
+	url = https://github.com/glfw/glfw
+[submodule "src/external/glxw"]
+	path = src/external/glxw
+	url = https://github.com/rikusalminen/glxw

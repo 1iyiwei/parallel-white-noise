@@ -1,6 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
-PROJECT(ExampleLibrary)
+PROJECT(CoreLibrary)
 
 ADD_LIBRARY(${PROJECT_NAME}
     Exception.hpp
