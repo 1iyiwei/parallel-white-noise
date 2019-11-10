@@ -23,6 +23,12 @@ Scene.cpp
 Scene.hpp
 Shader.cpp
 Shader.hpp
+TextureCoordinateFragmentShader.cpp
+TextureCoordinateFragmentShader.hpp
+TextureQuadScene.cpp
+TextureQuadScene.hpp
+TextureVertexShader.cpp
+TextureVertexShader.hpp
 VertexShader.cpp
 VertexShader.hpp
 )

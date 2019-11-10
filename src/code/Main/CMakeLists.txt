@@ -13,6 +13,7 @@ SET(LIBRARIES glfw glxw ${GLFW_LIBRARIES} ${GLXW_LIBRARY} ${OPENGL_LIBRARY} ${CM
 set(projects
 Basic
 HelloWorld
+TextureCoordinate
 )
 
 foreach(project ${projects})
