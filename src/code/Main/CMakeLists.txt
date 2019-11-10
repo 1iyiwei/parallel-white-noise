@@ -14,6 +14,7 @@ set(projects
 Basic
 HelloWorld
 TextureCoordinate
+White
 )
 
 foreach(project ${projects})

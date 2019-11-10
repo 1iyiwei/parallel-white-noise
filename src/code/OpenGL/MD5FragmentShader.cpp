@@ -21,7 +21,11 @@ MD5FragmentShader::MD5FragmentShader(void): FragmentShader(Source())
 string MD5FragmentShader::Source(void) const
 {
     constexpr char *frag =
+#if 1
 #include "texcoord.frag"
+#else
+#include "md5.frag"
+#endif
         ;
 
     return frag;

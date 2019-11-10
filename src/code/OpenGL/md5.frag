@@ -1,4 +1,7 @@
-unsigned int leftRotate(in unsigned int x, in unsigned int n)
+R"(
+#version 330
+
+unsigned int leftRotate(unsigned int x, unsigned int n)
 {
     unsigned int t =  ( ((x) << (n)) | ((x) >> (32u-n)) );
     return t;
@@ -316,7 +319,7 @@ float4 ConvertToFloat01(uvec4 value)
     return result;
 }
 
-float4 UniformRandom01(float2 input, uniform int key)
+float4 UniformRandom01(float2 input, int key)
 {
     unsigned int input_padded[16];
     setupInput(input, key, input_padded);
@@ -327,22 +330,14 @@ float4 UniformRandom01(float2 input, uniform int key)
     return ConvertToFloat01(digest);
 }
 
-struct FragmentInput
+uniform int key;
+uniform float2 res;
+in vec2 ftexcoord;
+layout(location = 0) out vec4 output;
+void main()
 {
-    float4 tex : TEX0;
-    float4 col : COL0;
-};
-
-struct FragmentOutput
-{
-    float4 col : COL;
-};
-
-FragmentOutput fragment(FragmentInput input, uniform int key, uniform float2 res)
-{
-    FragmentOutput output;
-    output.col = UniformRandom01(input.tex.xy * res, key);
+    output = UniformRandom01(ftexcoord.xy * res, key);
 
     return output;
 }
-
+)"
