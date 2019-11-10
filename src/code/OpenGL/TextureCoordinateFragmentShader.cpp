@@ -21,7 +21,6 @@ string TextureCoordinateFragmentShader::Source(const GLenum type) const
 {
     stringstream ss;
     ss << "#version 330\n";
-    ss << "uniform " << Sampler(type) << " " << TextureSymbol() << ";\n";
     ss << "in vec" << DomainDimension(type) << " ftexcoord;\n";
     ss << "layout(location = 0) out vec4 FragColor;\n";
     ss << "void main() {\n";
@@ -29,11 +28,6 @@ string TextureCoordinateFragmentShader::Source(const GLenum type) const
     ss << "}\n";
 
     return ss.str();
-}
-
-string TextureCoordinateFragmentShader::TextureSymbol(void) const
-{
-    return "tex";
 }
 
 string TextureCoordinateFragmentShader::Sampler(const GLenum type)

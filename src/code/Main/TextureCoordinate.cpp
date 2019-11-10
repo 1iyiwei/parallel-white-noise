@@ -103,8 +103,6 @@ int Main(int argc, char **argv)
 
         Program program(shaders);
 
-        const GLint texture_location = glGetUniformLocation(program.ID(), fragment_shader.TextureSymbol().c_str());
-    
         TextureQuadScene scene;
 
         while(!glfwWindowShouldClose(window) && !game_over)

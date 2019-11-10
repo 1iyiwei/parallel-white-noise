@@ -17,6 +17,8 @@ DiffuseQuadScene.cpp
 DiffuseQuadScene.hpp
 FragmentShader.cpp
 FragmentShader.hpp
+MD5FragmentShader.cpp
+MD5FragmentShader.hpp
 Program.cpp
 Program.hpp
 Scene.cpp

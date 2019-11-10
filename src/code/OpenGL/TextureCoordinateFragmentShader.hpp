@@ -18,8 +18,6 @@ public:
 
     string Source(const GLenum type) const;
 
-    string TextureSymbol(void) const;
-
     static string Sampler(const GLenum type);
     static int DomainDimension(const GLenum type);
 };
