@@ -81,6 +81,9 @@ int Main(int argc, char **argv)
     const int width = (arg_ctr + 1) < argc ? atoi(argv[++arg_ctr]) : default_win_size;
     const int height = (arg_ctr + 1) < argc ? atoi(argv[++arg_ctr]) : width;
 
+    global_state.window_size[0] = width;
+    global_state.window_size[1] = height;
+
     const unsigned int key = static_cast<unsigned int>(time(0));
 
     // init

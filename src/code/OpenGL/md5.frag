@@ -300,11 +300,11 @@ float convertToFloatStanley(unsigned int value)
 
 float ConvertToFloat01(unsigned int value)
 {
-#if 1
+#if 0
     float result = float(value)/float(0xffffffffu)+0.5;
 #else
     // Li-Yi: should use this one
-    float result = intBitsToFloat(0x3f800000u | (value & 0x007fffffu)) - 1.0;
+    float result = uintBitsToFloat(0x3f800000u | (value & 0x007fffffu)) - 1.0;
 #endif
 
     return result;
