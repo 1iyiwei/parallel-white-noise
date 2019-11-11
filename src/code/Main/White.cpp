@@ -10,6 +10,8 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <iomanip>
+#include <time.h>
 using namespace std;
 
 #include <stdlib.h>
@@ -28,7 +30,30 @@ using namespace std;
 
 #include "Exception.hpp"
 
-bool game_over = false;
+
+struct State
+{
+    State(void);
+
+    bool game_over;
+    vector<int> window_size; // in screen pixels
+};
+
+State::State(void): 
+    game_over(false),
+    window_size(2, 0)
+{
+    // nothing else to do
+}
+
+State global_state;
+
+void FramebufferSize(GLFWwindow* window, int width, int height)
+{
+    glViewport(0, 0, width, height);
+    global_state.window_size[0] = width;
+    global_state.window_size[1] = height;
+}
 
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -37,7 +62,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         switch(key)
         {
         case GLFW_KEY_ESCAPE:
-            game_over = true;
+            global_state.game_over = true;
             break;
 
         default:
@@ -56,6 +81,8 @@ int Main(int argc, char **argv)
     const int width = (arg_ctr + 1) < argc ? atoi(argv[++arg_ctr]) : default_win_size;
     const int height = (arg_ctr + 1) < argc ? atoi(argv[++arg_ctr]) : width;
 
+    const unsigned int key = static_cast<unsigned int>(time(0));
+
     // init
     if(glfwInit() == GL_FALSE) 
     {
@@ -70,7 +97,7 @@ int Main(int argc, char **argv)
 
     // create a window
     GLFWwindow *window;
-    if((window = glfwCreateWindow(width, height, "triangle", 0, 0)) == 0) 
+    if((window = glfwCreateWindow(width, height, "parallel white noise", 0, 0)) == 0) 
     {
         cerr << "failed to open window" << endl;
         glfwTerminate();
@@ -88,7 +115,7 @@ int Main(int argc, char **argv)
     }
 
     // call backs
-    glfwSetFramebufferSizeCallback(window, Callbacks::FramebufferSize);
+    glfwSetFramebufferSizeCallback(window, FramebufferSize);
     glfwSetKeyCallback(window, KeyCallback);
 
     // scope for program and scene objects
@@ -105,12 +132,18 @@ int Main(int argc, char **argv)
 
         TextureQuadScene scene;
 
-        while(!glfwWindowShouldClose(window) && !game_over)
+        while(!glfwWindowShouldClose(window) && !global_state.game_over)
         {
             glfwPollEvents();
 
             // draw stuff
             program.Use();
+
+            const GLint res_location = glGetUniformLocation(program.ID(), fragment_shader.ResSymbol().c_str());
+            glUniform2i(res_location, global_state.window_size[0], global_state.window_size[1]);
+
+            const GLint key_location = glGetUniformLocation(program.ID(), fragment_shader.KeySymbol().c_str());
+            glUniform1i(key_location, key);
 
             scene.Render();
 

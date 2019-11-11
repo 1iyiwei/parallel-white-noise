@@ -17,6 +17,8 @@ public:
     MD5FragmentShader(void);
 
     string Source(void) const;
+    static string ResSymbol(void);
+    static string KeySymbol(void);
 };
 
 #endif

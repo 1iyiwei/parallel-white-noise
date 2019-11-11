@@ -95,7 +95,7 @@ void initABCD(inout unsigned int A, inout unsigned int B, inout unsigned int C, 
     D = 0x10325476u;
 }
 
-void setupInput(float2 absCoord, int key, inout unsigned int input[16])
+void setupInput(vec2 absCoord, int key, inout unsigned int input[16])
 {
     unsigned int inputLen = 128u;  //the input length is four 32 bit integers
     //assume that the absCoord are in un-normalized range of window size
@@ -300,16 +300,19 @@ float convertToFloatStanley(unsigned int value)
 
 float ConvertToFloat01(unsigned int value)
 {
-    // float result = float(value)/float(0xffffffffu)+0.5;
-
+#if 1
+    float result = float(value)/float(0xffffffffu)+0.5;
+#else
+    // Li-Yi: should use this one
     float result = intBitsToFloat(0x3f800000u | (value & 0x007fffffu)) - 1.0;
-    
+#endif
+
     return result;
 }
 
-float4 ConvertToFloat01(uvec4 value)
+vec4 ConvertToFloat01(uvec4 value)
 {
-    float4 result;
+    vec4 result;
 
     result.x = ConvertToFloat01(value.x);
     result.y = ConvertToFloat01(value.y);
@@ -319,7 +322,7 @@ float4 ConvertToFloat01(uvec4 value)
     return result;
 }
 
-float4 UniformRandom01(float2 input, int key)
+vec4 UniformRandom01(vec2 input, int key)
 {
     unsigned int input_padded[16];
     setupInput(input, key, input_padded);
@@ -331,13 +334,11 @@ float4 UniformRandom01(float2 input, int key)
 }
 
 uniform int key;
-uniform float2 res;
+uniform ivec2 res;
 in vec2 ftexcoord;
 layout(location = 0) out vec4 output;
 void main()
 {
     output = UniformRandom01(ftexcoord.xy * res, key);
-
-    return output;
 }
 )"

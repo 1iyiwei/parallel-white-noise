@@ -21,7 +21,7 @@ MD5FragmentShader::MD5FragmentShader(void): FragmentShader(Source())
 string MD5FragmentShader::Source(void) const
 {
     constexpr char *frag =
-#if 1
+#if 0
 #include "texcoord.frag"
 #else
 #include "md5.frag"
@@ -29,4 +29,14 @@ string MD5FragmentShader::Source(void) const
         ;
 
     return frag;
+}
+
+string MD5FragmentShader::ResSymbol(void)
+{
+    return "res";
+}
+
+string MD5FragmentShader::KeySymbol(void)
+{
+    return "key";
 }
