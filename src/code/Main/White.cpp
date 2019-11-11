@@ -37,11 +37,15 @@ struct State
 
     bool game_over;
     vector<int> window_size; // in screen pixels
+    unsigned int key;
+    bool animate;
 };
 
 State::State(void): 
     game_over(false),
-    window_size(2, 0)
+    window_size(2, 0),
+    key(0),
+    animate(false)
 {
     // nothing else to do
 }
@@ -66,7 +70,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
             break;
 
         default:
-            // do nothing
+            global_state.key++;
             break;
         }
     }
@@ -81,10 +85,12 @@ int Main(int argc, char **argv)
     const int width = (arg_ctr + 1) < argc ? atoi(argv[++arg_ctr]) : default_win_size;
     const int height = (arg_ctr + 1) < argc ? atoi(argv[++arg_ctr]) : width;
 
+    global_state.animate = (arg_ctr + 1) < argc ? atoi(argv[++arg_ctr]) : false;
+
     global_state.window_size[0] = width;
     global_state.window_size[1] = height;
 
-    const unsigned int key = static_cast<unsigned int>(time(0));
+    global_state.key = static_cast<unsigned int>(time(0));
 
     // init
     if(glfwInit() == GL_FALSE) 
@@ -146,7 +152,9 @@ int Main(int argc, char **argv)
             glUniform2i(res_location, global_state.window_size[0], global_state.window_size[1]);
 
             const GLint key_location = glGetUniformLocation(program.ID(), fragment_shader.KeySymbol().c_str());
-            glUniform1i(key_location, key);
+            glUniform1i(key_location, global_state.key);
+
+            if(global_state.animate) global_state.key++;
 
             scene.Render();
 

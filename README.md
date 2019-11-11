@@ -1,4 +1,6 @@
-# OpenGL sample project #
+# Parallel White Noise via Fragment Shader #
+
+This is a GLSL + GLFW (re)implementation of the earlier [Cg version](https://github.com/1iyiwei/noise/tree/master/WhiteNoise/) of [parallel white noise generation on a GPU via cryptographic hash](https://dl.acm.org/citation.cfm?id=1342263).
 
 ## Clone ##
 
@@ -22,13 +24,13 @@ git submodule update --init --recursive
 For Windows under the visual studio command prompt:
 ```
 cd build
-..\src\cnmake.bat ..\src
-nmake
-```
-
-Or:
-```
-cd build
 cmake ..\src
 cmake --build . --config Release
+```
+
+## Run ##
+
+```
+cd build
+./bin/Release/White.exe [width (int) height (int) animate (0 or 1)]
 ```
