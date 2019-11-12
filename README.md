@@ -35,3 +35,4 @@ cd build
 ./bin/Release/White.exe [width (int) height (int) animate (0 or 1)]
 ```
 Press escape key to quit, any other key to change the noise key per frame.
+You can resize the window to regenerate the random numbers.
