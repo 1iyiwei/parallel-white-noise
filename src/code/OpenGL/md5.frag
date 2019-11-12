@@ -1,93 +1,93 @@
 R"(
 #version 330
 
-unsigned int leftRotate(unsigned int x, unsigned int n)
+uint leftRotate(uint x, uint n)
 {
-    unsigned int t =  ( ((x) << (n)) | ((x) >> (32u-n)) );
+    uint t =  ( ((x) << (n)) | ((x) >> (32u-n)) );
     return t;
 }
 
-unsigned int F(unsigned int x, unsigned int y, unsigned int z)
+uint F(uint x, uint y, uint z)
 {
-    unsigned int t;
+    uint t;
     t = ( (x & y) | ((~x) & z) );
     return t;
 }
 
-unsigned int G(unsigned int x, unsigned int y, unsigned int z)
+uint G(uint x, uint y, uint z)
 {
-    unsigned int t;
+    uint t;
     t = ( (x & z) | ((~z) & y) );
     return t;
 }
 
-unsigned int H(unsigned int x, unsigned int y, unsigned int z)
+uint H(uint x, uint y, uint z)
 {
-    unsigned int t;
+    uint t;
     t = ( (x ^ y ^ z) );
     return t;
 }
 
-unsigned int I(unsigned int x, unsigned int y, unsigned int z)
+uint I(uint x, uint y, uint z)
 {
-    unsigned int t;
+    uint t;
     t = ( y ^ ((x) | (~z)));
     return t;
 }
 
-void FF(inout uvec4 td, int i, inout uvec4 Fr, float p, in unsigned int data[16])
+void FF(inout uvec4 td, int i, inout uvec4 Fr, float p, in uint data[16])
 {
-    unsigned int Ft = F(td.y,td.z,td.w);
-    unsigned int r = Fr.x;
+    uint Ft = F(td.y,td.z,td.w);
+    uint r = Fr.x;
     Fr = Fr.yzwx;
 	
     float t = sin(float(i)) * p;
-    unsigned int trigFunc = unsigned int(floor(t));
+    uint trigFunc = uint(floor(t));
     td.x = td.y + leftRotate( (td.x + Ft + trigFunc +data[i]), r );
     td = td.yzwx;
 }
 
-void GG(inout uvec4 td, int i, inout uvec4 Gr, float p, in unsigned int data[16])
+void GG(inout uvec4 td, int i, inout uvec4 Gr, float p, in uint data[16])
 {
-    unsigned int Ft = G(td.y,td.z,td.w);
+    uint Ft = G(td.y,td.z,td.w);
     i = (5*i+1) %16;
-    unsigned int r = Gr.x;
+    uint r = Gr.x;
     Gr = Gr.yzwx;
     
     float t = sin(float(i)) * p;
-    unsigned int trigFunc = unsigned int(floor(t));
+    uint trigFunc = uint(floor(t));
     td.x = td.y + leftRotate( (td.x + Ft + trigFunc +data[i]), r );
     td = td.yzwx;
 }
 
-void HH(inout uvec4 td, int i, inout uvec4 Hr, float p, in unsigned int data[16])
+void HH(inout uvec4 td, int i, inout uvec4 Hr, float p, in uint data[16])
 {
-    unsigned int Ft = H(td.y,td.z,td.w);
+    uint Ft = H(td.y,td.z,td.w);
     i = (3*i+5) %16;
-    unsigned int r = Hr.x;
+    uint r = Hr.x;
     Hr = Hr.yzwx;
     
     float t = sin(float(i)) * p;
-    unsigned int  trigFunc = unsigned int(floor(t));
+    uint  trigFunc = uint(floor(t));
     td.x = td.y + leftRotate( (td.x + Ft + trigFunc +data[i]), r );
     td = td.yzwx;
 }
 
-void II(inout uvec4 td, int i, inout uvec4 Ir, float p, in unsigned int data[16])
+void II(inout uvec4 td, int i, inout uvec4 Ir, float p, in uint data[16])
 {
-    unsigned int Ft = I(td.y,td.z,td.w);
+    uint Ft = I(td.y,td.z,td.w);
     i = (7*i) %16;
-    unsigned int r = Ir.x;
+    uint r = Ir.x;
     Ir = Ir.yzwx;
     
     float t = sin(float(i)) * p;
-    unsigned int trigFunc = unsigned int(floor(t));
+    uint trigFunc = uint(floor(t));
     td.x = td.y + leftRotate( (td.x + Ft + trigFunc +data[i]), r );
     td = td.yzwx;
 }
 
 //init ABCD with the magical numbers
-void initABCD(inout unsigned int A, inout unsigned int B, inout unsigned int C, inout unsigned int D)
+void initABCD(inout uint A, inout uint B, inout uint C, inout uint D)
 {
     A = 0x67452301u;
     B = 0xefcdab89u;
@@ -95,36 +95,36 @@ void initABCD(inout unsigned int A, inout unsigned int B, inout unsigned int C, 
     D = 0x10325476u;
 }
 
-void setupInput(vec2 absCoord, int key, inout unsigned int input[16])
+void setupInput(vec2 absCoord, int key, inout uint incoming[16])
 {
-    unsigned int inputLen = 128u;  //the input length is four 32 bit integers
+    uint inputLen = 128u;  //the input length is four 32 bit integers
     //assume that the absCoord are in un-normalized range of window size
 
-    input[0] = unsigned int(floor(absCoord.x));
-    input[1] = unsigned int(floor(absCoord.y));
+    incoming[0] = uint(floor(absCoord.x));
+    incoming[1] = uint(floor(absCoord.y));
 
     //add key to this input
-    input[0] = input[0] ^ unsigned int(key);
-    input[1] = input[1] ^ unsigned int(key);
+    incoming[0] = incoming[0] ^ uint(key);
+    incoming[1] = incoming[1] ^ uint(key);
     //now add the key to the third input
-    input[2] = unsigned int(key);
-    input[3] = unsigned int(key);
+    incoming[2] = uint(key);
+    incoming[3] = uint(key);
 	
-    input[4] = 0x80000000u;
+    incoming[4] = 0x80000000u;
 
     //testing use only	
     //now we make sure the rest is zero until input 14 and 15
     for(int i=5; i<16; i++)
-        input[i] = 0u;
+        incoming[i] = 0u;
         
     //now we can fix 14 and 15 ourselves, 14 is zero and 15 is inputLen  
-    input[14] = 0u;
-    input[15] = inputLen;
+    incoming[14] = 0u;
+    incoming[15] = inputLen;
 }
 
-void MD5opt(in unsigned int data[16], inout uvec4 digest)
+void MD5opt(in uint data[16], inout uvec4 digest)
 {
-    unsigned int A,B,C,D, Ft, Gt;
+    uint A,B,C,D, Ft, Gt;
 
     //initABCD(A,B,C,D);
     digest = uvec4(0x67452301u, 0xefcdab89u, 0x98badcfeu, 0x10325476u);
@@ -133,20 +133,20 @@ void MD5opt(in unsigned int data[16], inout uvec4 digest)
     float t;
 	
     //save the initial values
-    /*unsigned int AA = A;
-      unsigned int BB = B;
-      unsigned int CC = C;
-      unsigned int DD = D;*/
+    /*uint AA = A;
+      uint BB = B;
+      uint CC = C;
+      uint DD = D;*/
     
-    unsigned int i; 
-    unsigned int index;
-    unsigned int trigFunc;
+    uint i; 
+    uint index;
+    uint trigFunc;
     
     uvec4 Fr = uvec4(7u,12u, 17u,22u);  
     uvec4 Gr = uvec4(5u, 9u, 14u,20u);
     uvec4 Hr = uvec4(4u,11u, 16u,23u);
     uvec4 Ir = uvec4(6u,10u, 15u,21u);
-    unsigned int r;
+    uint r;
 	
     //figure out how to rotate it
     for(i=0u; i<64u; i++)
@@ -188,7 +188,7 @@ void MD5opt(in unsigned int data[16], inout uvec4 digest)
         }//end else
         
         t = sin(float(i)) * p;
-        trigFunc = unsigned int(floor(t));
+        trigFunc = uint(floor(t));
         td.x = td.y + leftRotate( (td.x + Ft + trigFunc +data[int(Gt)]), r );
         td = td.yzwx;
     }//end for
@@ -197,9 +197,9 @@ void MD5opt(in unsigned int data[16], inout uvec4 digest)
 
 }//end MD5opt
 
-void MD5unroll(in unsigned int data[16], inout uvec4 digest)
+void MD5unroll(in uint data[16], inout uvec4 digest)
 {
-    unsigned int Ft, Gt;
+    uint Ft, Gt;
     
     //initABCD(A,B,C,D);
     digest = uvec4(0x67452301u, 0xefcdab89u, 0x98badcfeu, 0x10325476u);
@@ -283,11 +283,11 @@ void MD5unroll(in unsigned int data[16], inout uvec4 digest)
 }//end MD5unroll
 
 // Li-Yi: this is incorrect; see ConvertToFloat01 below
-float convertToFloatStanley(unsigned int value)
+float convertToFloatStanley(uint value)
 {
-    unsigned int signbit = (value & 0x80000000u) >> 31u;
-    unsigned int mantissa = (value & 0x7fffff00u) >> 8u;
-    unsigned int exponent = (value & 0x000000ffu);
+    uint signbit = (value & 0x80000000u) >> 31u;
+    uint mantissa = (value & 0x7fffff00u) >> 8u;
+    uint exponent = (value & 0x000000ffu);
     
     float fVal;
     fVal = float(mantissa) / pow(2.0,23.0) + 1;
@@ -298,7 +298,7 @@ float convertToFloatStanley(unsigned int value)
     return fVal;
 }
 
-float ConvertToFloat01(unsigned int value)
+float ConvertToFloat01(uint value)
 {
 #if 0
     float result = float(value)/float(0xffffffffu)+0.5;
@@ -322,10 +322,10 @@ vec4 ConvertToFloat01(uvec4 value)
     return result;
 }
 
-vec4 UniformRandom01(vec2 input, int key)
+vec4 UniformRandom01(vec2 incoming, int key)
 {
-    unsigned int input_padded[16];
-    setupInput(input, key, input_padded);
+    uint input_padded[16];
+    setupInput(incoming, key, input_padded);
 
     uvec4 digest;
     MD5unroll(input_padded, digest);
@@ -336,9 +336,9 @@ vec4 UniformRandom01(vec2 input, int key)
 uniform int key;
 uniform ivec2 res;
 in vec2 ftexcoord;
-layout(location = 0) out vec4 output;
+layout(location = 0) out vec4 outcome;
 void main()
 {
-    output = UniformRandom01(ftexcoord.xy * res, key);
+    outcome = UniformRandom01(ftexcoord.xy * res, key);
 }
 )"
